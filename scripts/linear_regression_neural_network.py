@@ -123,21 +123,6 @@ if configuration_details["figure_generation_switch"]:
 # Generate synthetic data for linear regression
 synthetic_data = gen_synthetic_data_linear(synthetic_data_properties)
 
-""""
-x_data = np.random.uniform(synthetic_data_properties["x_data_range"][0],
-                           synthetic_data_properties["x_data_range"][1],
-                           (synthetic_data_properties["n_samples"], synthetic_data_properties["n_features"]))
-y_data = synthetic_data_properties["feature_weights"] * x_data + synthetic_data_properties["bias"]
-y_data = y_data + synthetic_data_properties["absolute_noise_scalar"] * np.random.randn(synthetic_data_properties["n_samples"], 1) + \
-         synthetic_data_properties["relative_noise_scalar_fraction"] * y_data * np.random.randn(synthetic_data_properties["n_samples"], 1)
-         
-# Convert to pandas DataFrame 
-synthetic_data = pd.DataFrame(x_data, columns=synthetic_data_properties["feature_names"])
-del x_data
-synthetic_data["y_data"] = y_data
-del y_data
-"""
-
 # ============= TRAIN LINEAR REGRESSION MODEL ==============
 # Prepare data for training
 lr_truth_model = LinearRegression()
@@ -146,11 +131,11 @@ lr_truth_model_predictions = lr_truth_model.predict(synthetic_data[synthetic_dat
 lr_truth_model_weights = lr_truth_model.coef_
 lr_truth_model_bias = lr_truth_model.intercept_
 del lr_truth_model
-lr_truth_model_fit_x = [synthetic_data[synthetic_data_properties["feature_names"]].min(), synthetic_data[synthetic_data_properties["feature_names"]].max()]
-
-lr_truth_model_fit_y = [lr_truth_model_fit_x[0] * lr_truth_model_weights + lr_truth_model_bias]
-
-lr_truth_model_fit_y.append(lr_truth_model_fit_x[1] * lr_truth_model_weights + lr_truth_model_bias)
+x_min = synthetic_data[synthetic_data_properties["feature_names"]].min().values[0]
+x_max = synthetic_data[synthetic_data_properties["feature_names"]].max().values[0]
+lr_truth_model_fit_x = (x_min, x_max)
+del x_min, x_max
+lr_truth_model_fit_y = tuple(lr_truth_model_fit_x * lr_truth_model_weights + lr_truth_model_bias)
 
 # =============== VISAULIZE SYNTHETIC DATA =================
 if configuration_details["figure_generation_switch"]:
@@ -158,9 +143,8 @@ if configuration_details["figure_generation_switch"]:
     plt.plot(lr_truth_model_fit_x,lr_truth_model_fit_y, color="red", label="Truth Model Predictions")
     plt.legend()
     figure_savepath = f"{configuration_details["figure_directory"]}{os.sep}synthetic_data_scatter_plot.png"
-    print(f"figure_savepath is {figure_savepath}")
     plt.savefig(figure_savepath)
-
+    print(f"figure saved:  {figure_savepath}")
 
 """
 # Troubleshooting Snipbits
