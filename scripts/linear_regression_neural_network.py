@@ -24,6 +24,14 @@ Development Status:
         - Evaluate the performance of the custom-built NN with respect to the tensorflow NN against the
           scikit-learn model
 
+Usage: 
+    1. Modify the user-defined parameters in the "DEFINE USER INPUTS" section as desired.
+    2. Change to the main directory of the project in the terminal: 
+           cd /home/mike/GitHub/AIML_Demonstration/).
+    3. Run the script:
+           python -m scripts.linear_regression_neural_network
+    4. Observe output figures created in the specified directory.
+
 Desired Capabilities:
     1. Data Visualization: 
         a. Training Progress: 
@@ -47,15 +55,13 @@ Desired Capabilities:
         a. Some of the lines of code here should be converted to funcitons, including the 
            synthetic data generation. 
 
-
-Usage: 
-# 1. Modify the user-defined parameters in the "DEFINE USER INPUTS" section as desired.
-# 2. Run the script. 
-# 3. Observe output figures created in the specified directory.
-------------------------------------------------------------------
-ID  |  Author   |     Date      |    Description
-------------------------------------------------------------------
-0   | M.Pogash  |  29-Mar-2026   |  Initial Drop                   
+Revision History:
+    ------------------------------------------------------------------
+    |  ID  |  Author     |     Date       |       Description
+    ------------------------------------------------------------------
+    |  0   | M.Pogash    |  29-Mar-2026   | - Initial Drop                   
+    ------------------------------------------------------------------
+    
 """
 
 # ========== IMPORT LIBRARIES ==============
@@ -66,6 +72,10 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import os
+
+# Custom imports
+from src.data_generation.gen_synthetic_data_linear import gen_synthetic_data_linear
+#from GitHub.AIML_Demonstration.src.data_generation.gen_synthetic_data_linear import gen_synthetic_data_linear
 
 # ========= DEFINE USER INPUTS ============
 synthetic_data_properties = {
@@ -111,17 +121,22 @@ if configuration_details["figure_generation_switch"]:
 
 # ============= GENERATE SYNTHETIC DATA ==============
 # Generate synthetic data for linear regression
+synthetic_data = gen_synthetic_data_linear(synthetic_data_properties)
+
+""""
 x_data = np.random.uniform(synthetic_data_properties["x_data_range"][0],
                            synthetic_data_properties["x_data_range"][1],
                            (synthetic_data_properties["n_samples"], synthetic_data_properties["n_features"]))
 y_data = synthetic_data_properties["feature_weights"] * x_data + synthetic_data_properties["bias"]
 y_data = y_data + synthetic_data_properties["absolute_noise_scalar"] * np.random.randn(synthetic_data_properties["n_samples"], 1) + \
          synthetic_data_properties["relative_noise_scalar_fraction"] * y_data * np.random.randn(synthetic_data_properties["n_samples"], 1)
+         
 # Convert to pandas DataFrame 
 synthetic_data = pd.DataFrame(x_data, columns=synthetic_data_properties["feature_names"])
 del x_data
 synthetic_data["y_data"] = y_data
 del y_data
+"""
 
 # ============= TRAIN LINEAR REGRESSION MODEL ==============
 # Prepare data for training
