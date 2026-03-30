@@ -9,8 +9,6 @@ Description:
     Performance is evaluated using scikit-learn's LinearRegression model as a benchmark for comparison as well
     as a tensorflow NN. The script also includes visualization of the synthetic data and the results of the 
     various models; figures are save to the specified directory.
-
-    The script follows the work of "Neural Network From Scratch In Python" by Dataquest on YouTube.
     
 Development Status: 
     Partially Complete. 
@@ -38,6 +36,9 @@ Tips:
        learning rate by an order of magnitude to speed up convergence.
 
 Desired Capabilities:
+    0. Configuration File Driven Architecture:
+        a. The script should be driven by a configuration file
+
     1. Data Visualization: 
         a. Training Progress: 
             - figure with 2 subplots: 
@@ -68,7 +69,7 @@ Revision History:
     
 """
 
-# ========== IMPORT LIBRARIES ==============
+# == IMPORT LIBRARIES ==================================================================
 from more_itertools import tail
 from datetime import datetime
 from sklearn.linear_model import LinearRegression
@@ -91,7 +92,10 @@ from tensorflow.keras import layers, models
 # Custom imports
 from src.data_generation.gen_synthetic_data_linear import gen_synthetic_data_linear
 
-# ========= DEFINE USER INPUTS ============
+# == DEFINE USER INPUTS =====================================================================
+# Modify the user-defined parameters in this section as desired.
+# Future iterations will use a configuration file
+
 synthetic_data_properties = {
     "n_samples": 5E3,
     "feature_weights": [4],
@@ -101,32 +105,36 @@ synthetic_data_properties = {
     "x_data_range": (0, 10)
 }
 
-neural_network_properties = {
-    "learning_rate": 0.001,
-    "n_epochs": 1000,
-    "early_stopping_threshold": 0.001
-}
-
 configuration_details = {
     "figure_generation_switch": True,
-    "figure_directory": f"/home/mike/GitHub/AIML_Demonstration/figures/runs{datetime.now().date()}"
+    "figure_directory": f"/home/mike/GitHub/AIML_Demonstration/figures/linear_regession_neural_network/runs{datetime.now().date()}"
 }
 
 tf_properties = {
-    "n_epochs": 50,
+    "n_epochs": 100,
     "test_size": 0.6,
     "batch_size": 32,
     "random_state": 42,
     "output_units": 1,
     "num_neurons": 1,
-    "learning_rate": 0.1,
+    "learning_rate": 0.01,
     "loss_metric": "mse",
     "report_metrics": ["mae"],
 }   
 
-# ========= END USER INPUT DEFINITION =====
+# not currently implement. 
+neural_network_properties = {
+    "learning_rate": 0.001,
+    "n_epochs": 1000,
+    "early_stopping_threshold": 0.001,
+    "activation_function": "linear"
+}
+
+# == END USER INPUT DEFINITION ==============================================================
+
+# WARNING. General users should not modify the code below. 
  
-# ============= INITATION ==============
+# == INITATION ==============================================================================
 # Set random seed for reproducibility
 np.random.seed(0)
 
@@ -151,11 +159,11 @@ if configuration_details["figure_generation_switch"]:
     if not os.path.exists(figures_directory):
         os.makedirs(figures_directory)
 
-# ============= GENERATE SYNTHETIC DATA ==============
+# == GENERATE SYNTHETIC DATA ====================================================================
 # Generate synthetic data for linear regression
 synthetic_data = gen_synthetic_data_linear(synthetic_data_properties)
 
-# ============= TRAIN LINEAR REGRESSION MODEL ==============
+# == TRAIN LINEAR REGRESSION MODEL ==============================================================
 # Prepare data for training
 lr_truth_model = LinearRegression()
 lr_truth_model.fit(synthetic_data[synthetic_data_properties["feature_names"]], synthetic_data["y_data"])
@@ -164,7 +172,7 @@ lr_truth_model_bias = lr_truth_model.intercept_
 # only keep neceessary info 
 del lr_truth_model
 
-# =============== TRAIN A NN USING TENSORFLOW =================
+# == TRAIN A NN USING TENSORFLOW =================================================================
 x_train, x_test, y_train, y_test = train_test_split(synthetic_data[synthetic_data_properties["feature_names"]].values, \
                                                     synthetic_data["y_data"].values, test_size=tf_properties["test_size"], \
                                                     random_state=tf_properties["random_state"])
@@ -193,7 +201,7 @@ tf_normalizer_sigma = feature_normalizer.scale_
 tf_model_weights_unnormalized = tf_model_weights / tf_normalizer_sigma 
 tf_model_bias_unnormalized = tf_model_bias - np.sum(tf_model_weights * tf_normalizer_mu / tf_normalizer_sigma) 
 
-# ============== EVALUATE TENSORFLOW NN PERFORMANCE ==============
+# == EVALUATE TENSORFLOW NN PERFORMANCE =========================================================
 #lr_truth_model_predictions = lr_truth_model.predict(x_test) #synthetic_data[synthetic_data_properties["feature_names"]])
 defined_model_predictions = synthetic_data_properties["feature_weights"] * x_test + synthetic_data_properties["bias"]   
 lr_truth_model_predictions = lr_truth_model_weights * x_test + lr_truth_model_bias
@@ -203,15 +211,31 @@ tf_model_predictions = tf_model.predict(x_test_normalized)
 lr_truth_model_residuals = defined_model_predictions - lr_truth_model_predictions
 tf_model_residuals = defined_model_predictions - tf_model_predictions
 
-# ============== EVALUATE PERFORMANCE OF MODELS ==============
+# == EVALUATE PERFORMANCE OF MODELS ==============================================================
 print(f"Defined Model Weights: {synthetic_data_properties['feature_weights']}, Defined Model Bias: {synthetic_data_properties['bias']}")
-print(f"Truth Model Weights: {lr_truth_model_weights}, Truth Model Bias: {lr_truth_model_bias}")
-print(f"TensorFlow Model Weights: {tf_model_weights_unnormalized}, TensorFlow Model Bias: {tf_model_bias_unnormalized}")
+print(f"Standrd Linear Regression Weights: {lr_truth_model_weights}, Truth Model Bias: {lr_truth_model_bias}")
+print(f"TensorFlow Linear Regression Weights: {tf_model_weights_unnormalized}, TensorFlow Model Bias: {tf_model_bias_unnormalized}")
 
-# =============== VISUALIZATION ===============================
+# == VISUALIZATION ===================================================================
 if configuration_details["figure_generation_switch"]:
+    # figure options
+    c_syn_marker = [0.5, 0.5, 0.5]
+    c_syn = [0, 0, 0]
+    c_lr = [1, 0, 0]
+    c_tf = [0, .5, 1]
+    fs_labels = 14
+    fs_text = 12
+    fs_legends = 12
+    lw = 3
+    ms = 2.5
+
+    # set global font size for figures
+    plt.rcParams.update({'font.size': fs_labels})
+
     # define path for output figure
-    figure_savepath = f"{configuration_details["figure_directory"]}{os.sep}synthetic_data_scatter_plot.png"
+    learning_rate_str = str.replace(str(tf_properties["learning_rate"]), ".", "p") # replace decimal point with 'p' for filename    
+    figure_filename = f"results_tf_nEpochs_{tf_properties['n_epochs']}_LearningRate_{learning_rate_str}.png"
+    figure_savepath = f"{configuration_details["figure_directory"]}{os.sep}{figure_filename}"
 
     #  visualize specific data 
     x_min = synthetic_data[synthetic_data_properties["feature_names"]].min() #.values[0]
@@ -227,46 +251,35 @@ if configuration_details["figure_generation_switch"]:
     fig, fig_ax = plt.subplots(1, 2, figsize=(18, 6))
     
     # Subplot 1: Scatter plot of synthetic data and model predictions
-    lw = 2
-    fig_ax[0].scatter(synthetic_data[synthetic_data_properties["feature_names"][0]], synthetic_data["y_data"], s = 2,alpha=0.3, color='blue', label="Synthetic Data")
-    fig_ax[0].plot(dataset_x_bounds, defined_model_fit_y, color="black", linestyle ='-', linewidth=lw, label="Defined Model")
-    fig_ax[0].plot(dataset_x_bounds, lr_truth_model_fit_y, color="red", linestyle ='--', linewidth=lw, label="Linear Regression")
-    fig_ax[0].plot(dataset_x_bounds, tf_model_fit_y, color="green", linestyle =':', linewidth=lw, label="TensorFlow")
-    fig_ax[0].set_title("Synthetic Data and Model Predictions")
+    fig_ax[0].scatter(synthetic_data[synthetic_data_properties["feature_names"][0]], synthetic_data["y_data"], s = ms, alpha=0.3, color=c_syn_marker, label="Synthetic Data")
+    fig_ax[0].plot(dataset_x_bounds, defined_model_fit_y, color=c_syn, linestyle ='-', linewidth=lw, label="Defined Model")
+    fig_ax[0].plot(dataset_x_bounds, lr_truth_model_fit_y, color=c_lr, linestyle ='--', linewidth=lw, label="Standard Linear Regression")
+    fig_ax[0].plot(dataset_x_bounds, tf_model_fit_y, color=c_tf, linestyle =':', linewidth=lw*1.25, label="TensorFlow Linear Regression")
+    fig_ax[0].set_title("Synthetic Data and Fits")
     fig_ax[0].set_xlabel(synthetic_data_properties["feature_names"][0])
     fig_ax[0].set_ylabel("y_data")
-    fig_ax[0].legend()  
+    fig_ax[0].legend(loc="upper left", fontsize=fs_legends)  
     label_str = f"Defined Model: Weights={synthetic_data_properties['feature_weights'][0]:.2f}, Bias={synthetic_data_properties['bias']:.2f}\n" \
         f"Linear Regression: Weights={lr_truth_model_weights[0]:.2f}, Bias={lr_truth_model_bias:.2f}\n" \
-        f"TensorFlow Model: Weights*={tf_model_weights_unnormalized[0][0]:.2f}, Bias*={tf_model_bias_unnormalized[0]:.2f}\n" \
-        f"TensoreFlow Training: n_epochs={tf_properties['n_epochs']}, learning_rate={tf_properties['learning_rate']}"
-    fig_ax[0].text(0.05, 0.95, label_str, transform=fig_ax[0].transAxes, fontsize=10, verticalalignment='top', \
-                   bbox=dict(boxstyle='round', facecolor='white', alpha=0.5)) 
-
+        f"TensorFlow Model: Weights*={tf_model_weights_unnormalized[0][0]:.2f}, Bias*={tf_model_bias_unnormalized[0]:.2f}\n\n" \
+        f"TensorFlow Training: n_epochs={tf_properties['n_epochs']}, learning_rate={tf_properties['learning_rate']}"
+    fig_ax[0].text(0.98, 0.02, label_str, transform=fig_ax[0].transAxes, fontsize=fs_text, verticalalignment='bottom', \
+                   horizontalalignment='right', bbox=dict(boxstyle='round', facecolor='white', alpha=0)) 
     # Subplot 2: Residuals
-    n_bins = synthetic_data_properties["n_samples"] // 10 # set number of bins based on number of samples
-    fig_ax[1].hist(lr_truth_model_residuals, bins=n_bins, density=True, alpha=0.5, color='red', label="Linear Regression")
-    fig_ax[1].hist(tf_model_residuals, bins=n_bins, density=True, alpha=0.5, color='green', label="TensorFlow")
-    fig_ax[1].set_title("Model vs Defined Model Residuals")
+    n_bins = synthetic_data_properties["n_samples"] // 20 # set number of bins based on number of samples
+    fig_ax[1].hist(lr_truth_model_residuals, bins=n_bins, density=True, alpha=0.5, color=c_lr, label="Standard Linear Regression")
+    fig_ax[1].hist(tf_model_residuals, bins=n_bins, density=True, alpha=0.5, color=c_tf, label="TensorFlow Linear Regression")
+    fig_ax[1].set_title("Model Residuals")
     fig_ax[1].set_xlabel("Residual Value")
     fig_ax[1].set_ylabel("Counts")
     fig_ax[1].set_yscale('log')
-    fig_ax[1].legend()  
+    fig_ax[1].legend(fontsize=fs_legends)  
      
     # save figure  
     plt.savefig(figure_savepath)
     print(f"figure saved:  {figure_savepath}")
 
 
-    """"
-    ax = synthetic_data.plot.scatter(synthetic_data_properties["feature_names"][0], "y_data", alpha=0.5, color='blue', label="Synthetic Data")
-    plt.plot(lr_truth_model_fit_x,lr_truth_model_fit_y, color="red", label="Truth Model Predictions")
-
-    plt.legend()
-    figure_savepath = f"{configuration_details["figure_directory"]}{os.sep}synthetic_data_scatter_plot.png"
-    plt.savefig(figure_savepath)
-    print(f"figure saved:  {figure_savepath}")
-    """
 
 """
 # Troubleshooting Snipbits
