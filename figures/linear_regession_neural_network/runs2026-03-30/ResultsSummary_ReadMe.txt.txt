@@ -17,4 +17,9 @@
 	Convergence to the solution is not observed using 50 epochs and a 
 	training rate of  0.01; displaying how critical its definition is. 
 
+	A very nice observation is the results collapsing to smaller values 
+	and losing their bias as an ideal combination of epochs and learning 
+	rates are used. It would be interesting to force an overfit during 
+	training and observe the residuals 
+
 	

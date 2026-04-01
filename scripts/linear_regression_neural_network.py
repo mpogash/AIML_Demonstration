@@ -9,7 +9,10 @@ Description:
     Performance is evaluated using scikit-learn's LinearRegression model as a benchmark for comparison as well
     as a tensorflow NN. The script also includes visualization of the synthetic data and the results of the 
     various models; figures are save to the specified directory.
-    
+
+    See the  ./figures/linear_regression_neural_network/ directory for a demonstration and parametric 
+              evaluation of number of epochs and learning rate         
+
 Development Status: 
     Partially Complete. 
     Scipt currently performs the following:
