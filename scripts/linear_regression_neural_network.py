@@ -43,25 +43,12 @@ Desired Capabilities:
         a. The script should be driven by a configuration file
 
     1. Data Visualization: 
-        a. Training Progress: 
-            - figure with 2 subplots: 
-                - subplot 1: Loss curve 
-                - subplot 2: CDF of errors for all samples, a unique CDF is created for each epoch
-                             and overlaid on the same figure
-
-        b. Model Performance Comparison:
-            - figure with 1 subplot:
-                - for the existing figure showing the x and y data, convert markers to a scatter density 
-                  plot if the number of samples is very large. 
-                - Add a textbox to the figure specifying the fit details for each model, such as weights, 
-                  bias, R^2 score, etc.) and the training details (e.g., n_epochs, learning_rate, etc.)                    
+        a. Add a logarithmic rounding funciton for figures
+        b. Add R^2 to text box of figures                   
 
     2. Activation Function Variation:
         a. Implement the ability to select different activation functions (e.g., ReLU, Sigmoid, Tanh)
            for the hidden layers of the NN and compare their performance on the linear regression
-    
-    3. Function Geenralization:
-        a. Some of the lines of code here should be converted to funcitons
 
 Revision History:
     ------------------------------------------------------------------
@@ -111,7 +98,7 @@ synthetic_data_properties = {
 configuration_details = {
     "figure_generation_switch": True,
     "figure_directory": f"/home/mike/GitHub/AIML_Demonstration/figures/linear_regession_neural_network/runs{datetime.now().date()}"
-}
+ }
 
 tf_properties = {
     "n_epochs": 100,
@@ -120,9 +107,9 @@ tf_properties = {
     "random_state": 42,
     "output_units": 1,
     "num_neurons": 1,
-    "learning_rate": 0.01,
+    "learning_rate": 0.1,
     "loss_metric": "mse",
-    "report_metrics": ["mae"],
+    "report_metrics": ["mse"], # remove? Not used in current iteration
 }   
 
 # not currently implement. 
@@ -194,7 +181,7 @@ tf_model.add(layers.Input(shape=(synthetic_data_properties["n_features"],)))
 tf_model.add(layers.Dense(tf_properties["num_neurons"], activation="linear"))
 tf_model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=tf_properties["learning_rate"]), \
                  loss=tf_properties["loss_metric"], metrics=tf_properties["report_metrics"]) 
-tf_model.fit(x_train_normalized, y_train, epochs=tf_properties["n_epochs"], \
+tf_model_history = tf_model.fit(x_train_normalized, y_train, epochs=tf_properties["n_epochs"], \
              validation_data=(x_test_normalized, y_test), batch_size=tf_properties["batch_size"], \
              verbose=0)
 tf_model_weights, tf_model_bias = tf_model.layers[0].get_weights()
@@ -222,15 +209,24 @@ print(f"TensorFlow Linear Regression Weights: {tf_model_weights_unnormalized}, T
 # == VISUALIZATION ===================================================================
 if configuration_details["figure_generation_switch"]:
     # figure options
+    fig_sz_x = 18
+    fig_sz_y = 5
     c_syn_marker = [0.5, 0.5, 0.5]
     c_syn = [0, 0, 0]
     c_lr = [1, 0, 0]
     c_tf = [0, .5, 1]
-    fs_labels = 14
-    fs_text = 12
-    fs_legends = 12
+    ms_train_test_loss = 4
+    c_train_loss = [0, 0, 0]
+    marker_train_loss = "s"
+    c_test_loss = [0.45, 0.45, 0.45]
+    marker_test_loss = "x"
+    fs_labels = 12
+    fs_text = 8
+    fs_legends = 10
     lw = 3
     ms = 2.5
+    lw_grid = 0.5
+    alpha_grid = 0.5
 
     # set global font size for figures
     plt.rcParams.update({'font.size': fs_labels})
@@ -251,7 +247,7 @@ if configuration_details["figure_generation_switch"]:
     tf_model_fit_y = tf_model_weights * dataset_x_bounds_scaled + tf_model_bias
 
     # create figure         
-    fig, fig_ax = plt.subplots(1, 2, figsize=(18, 6))
+    fig, fig_ax = plt.subplots(1, 3, figsize=(fig_sz_x, fig_sz_y))
     
     # Subplot 1: Scatter plot of synthetic data and model predictions
     fig_ax[0].scatter(synthetic_data[synthetic_data_properties["feature_names"][0]], synthetic_data["y_data"], s = ms, alpha=0.3, color=c_syn_marker, label="Synthetic Data")
@@ -277,7 +273,40 @@ if configuration_details["figure_generation_switch"]:
     fig_ax[1].set_ylabel("Counts")
     fig_ax[1].set_yscale('log')
     fig_ax[1].legend(fontsize=fs_legends)  
-     
+    # logarithmic rounding for y-axis limits
+    y_min, y_max = fig_ax[1].get_ylim() 
+    y_ax_min = 10**(np.floor(np.log10(y_min)))
+    y_ax_max = 10**(np.ceil(np.log10(y_max)))
+    fig_ax[1].set_ylim(y_ax_min, y_ax_max)  
+    fig_ax[1].grid(which='both', linestyle='--', linewidth=lw_grid, alpha=alpha_grid)
+
+    # Subplot 3: Training Progress Figure
+    y_train_loss = tf_model_history.history["loss"]
+    y_val_loss = tf_model_history.history["val_loss"]
+    if tf_properties["loss_metric"] == "mse":
+        y_train_loss = np.sqrt(y_train_loss)
+        y_val_loss = np.sqrt(y_val_loss)
+        y_axis_label = "RMSE"
+    elif tf_properties["loss_metric"] == "mae":
+        y_axis_label = "MAE"
+    else:
+        y_axis_label = tf_properties["loss_metric"] 
+
+    fig_ax[2].plot(y_train_loss, marker=marker_train_loss, color=c_train_loss, linestyle='none', ms = ms_train_test_loss, linewidth=lw, label="Training Loss")
+    fig_ax[2].plot(y_val_loss, marker=marker_test_loss, color=c_test_loss, linestyle='none', ms = ms_train_test_loss, linewidth=lw, label="Validation Loss")
+    fig_ax[2].set_title("TensorFlow Model Training Progress")
+    fig_ax[2].set_xlabel("Epoch")
+    fig_ax[2].set_ylabel(y_axis_label)
+    fig_ax[2].legend(fontsize=fs_legends)       
+    fig_ax[2].set_yscale('log')
+    fig_ax[2].grid(which='both', linestyle='--', linewidth=lw_grid, alpha=alpha_grid)
+    # logarithmic rounding for y-axis limits
+    y_min, y_max = fig_ax[2].get_ylim() 
+    y_ax_min = 10**(np.floor(np.log10(y_min)))
+    y_ax_max = 10**(np.ceil(np.log10(y_max)))
+    print(f"y_min is {y_min}, y_max is {y_max}, y_ax_min is {y_ax_min}, y_ax_max is {y_ax_max}")
+    fig_ax[2].set_ylim(y_ax_min, y_ax_max) 
+    
     # save figure  
     plt.savefig(figure_savepath)
     print(f"figure saved:  {figure_savepath}")
@@ -286,6 +315,7 @@ if configuration_details["figure_generation_switch"]:
 
 """
 # Troubleshooting Snipbits
+print(f"y_min is {y_min}, y_max is {y_max}, y_ax_min is {y_ax_min}, y_ax_max is {y_ax_max}")
 
 print(f"types of synthetic_data_properties samples: \n"
       f"n_samples: {type(synthetic_data_properties["n_samples"])}\n"
