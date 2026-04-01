@@ -15,8 +15,9 @@
 
 ### Purpose: 
     - The goal of this project is to showcase techincal capabilities with AIML, 
-      python, data visualation, and quantitative analysis.  
-    
+      python, data visualization,  quantitative analysis, and critical python 
+      libraries for data analysis (pandas, numpy, scikit-learn, matplotlib, tensorflow)  
+
 ### Current Capabilities
     - Neural Network (NN) for linear regression programmed from principles
         - see /scripts/linear_regression_neural_network.py
@@ -40,7 +41,7 @@
 
 
 ### Things To Do: 
-    - make scripts configuration file driven, currently defining inputs within top block of code
+    - make scripts configuration file driven, currently defining inputs within top block of code 
     - Wrap common lines into functions
     - Save synthetic data as a CSV to showcase reading it in and using it. 
     
