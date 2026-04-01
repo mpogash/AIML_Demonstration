@@ -1,0 +1,14 @@
+
+	Parametric evaluation of learning rate and number of epochs performed
+		learning rate: 0.01, 0.1
+		number of epochs: 10, 50, 100
+		
+	Notice that the TensorFlow model converges (with some bias, but not large) with 
+	only 10 iterations with a learning rate of 0.1. The dataset is very well defined, 
+	despite the noise. So the solution is easily found with a large learning rate. 
+	
+	Using a learning rate of 0.01 and 50 epochs, the TensorFlow model still does 
+	not converge. 
+
+	It is interesting to observe the collapse of the residuals and reduction of 
+	the bias over the most ideal combination of learning rate and number of epochs
