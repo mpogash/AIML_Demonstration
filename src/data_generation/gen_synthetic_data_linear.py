@@ -59,13 +59,18 @@ def gen_synthetic_data_linear(synthetic_data_properties):
     if not "feature_names" in synthetic_data_properties.keys():
         synthetic_data_properties["feature_names"] = [f"Feature_{i}" for i in range(synthetic_data_properties["n_features"])]
 
+    # == GENERATE THE SYNTHETIC DATA ========================
     x_data = np.random.uniform(synthetic_data_properties["x_data_range"][0],
                                synthetic_data_properties["x_data_range"][1],
                                (synthetic_data_properties["n_samples"], synthetic_data_properties["n_features"]))
     y_data = synthetic_data_properties["feature_weights"] * x_data + synthetic_data_properties["bias"]
     y_data = y_data + synthetic_data_properties["absolute_noise_scalar"] * np.random.randn(synthetic_data_properties["n_samples"], 1) + \
              synthetic_data_properties["relative_noise_scalar_fraction"] * y_data * np.random.randn(synthetic_data_properties["n_samples"], 1)
+
+    # == CONVERT PANDAS TO DATAFRAME ========================
     # Convert to pandas DataFrame 
     synthetic_data = pd.DataFrame(x_data, columns=synthetic_data_properties["feature_names"])
     synthetic_data["y_data"] = y_data
+
+    # == RETURN THE SYNTHETIC DATA  ==========================
     return synthetic_data
