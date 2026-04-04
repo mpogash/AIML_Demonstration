@@ -13,7 +13,6 @@ def test_mean_square_error():
         python -m AIML_Demonstration.src.data_analysis.test.test_mean_square_error
 
     Desired Capabilities:
-        make testing more robust
 
     Revision History:
         ------------------------------------------------------------------
@@ -27,16 +26,16 @@ def test_mean_square_error():
     print("\ncalled test_mean_square_error.py\n")
 
     # == IMPORT LIBRARIES ==================================
-    from AIML_Demonstration.src.data_analysis.mean_square_error import mean_square_error
+    from src.data_analysis.mean_square_error import mean_square_error
     import numpy as np
 
     # == MACHINE TOLERANCE THRESHOLD =======================
     mtt = 1E-15
 
     # == BUILD BASE ARRAYS FOR TESTING =====================
-    #err = np.random.randint(2,4) 
     test_array = np.arange(-5,5)
     err = np.random.uniform(2,4)
+    #err = np.random.randint(2,4) 
     err_sq = err**2
 
     # == TESTS =============================================
@@ -69,6 +68,7 @@ def test_mean_square_error():
     # account for machine precision
     assert mean_square_error(tens_1,tens_2) - err_sq < tens_1.size*mtt+mtt
 
+    # == REPORT STATUS =====================================
     print("test_mean_square_error.py successful\n")
 
 if __name__ == "__main__":
