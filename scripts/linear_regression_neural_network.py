@@ -96,7 +96,7 @@ synthetic_data_properties = {
 }
 
 configuration_details = {
-    "figure_generation_switch": True,
+    "figure_generation_switch": False,
     "figure_directory": f"/home/mike/GitHub/AIML_Demonstration/figures/linear_regession_neural_network/runs{datetime.now().date()}"
  }
 
