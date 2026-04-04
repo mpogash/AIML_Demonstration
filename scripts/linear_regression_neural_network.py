@@ -128,21 +128,6 @@ neural_network_properties = {
 # Set random seed for reproducibility
 np.random.seed(0)
 
-# Ensure user-defined values are appropriate.
-if type(synthetic_data_properties["n_samples"]) != int:
-    synthetic_data_properties["n_samples"] = int(synthetic_data_properties["n_samples"])
-    print(f"n_samples was a float, but has been converted to an integer: {synthetic_data_properties['n_samples']}")
-
-if type(synthetic_data_properties["bias"]) == int:
-    synthetic_data_properties["bias"] = synthetic_data_properties["bias"]+1E-16
-    print(f"bias was an integer, but has been converted to a float: {synthetic_data_properties['bias']}")   
-
-# Append n_features into synthetic data properties
-synthetic_data_properties["n_features"] = len(synthetic_data_properties["feature_weights"])
-
-# Create names for feature array
-synthetic_data_properties["feature_names"] = [f"Feature_{i}" for i in range(synthetic_data_properties["n_features"])]
-
 # Create directory for saving figures if it doesn't exist
 figures_directory = configuration_details["figure_directory"]
 if configuration_details["figure_generation_switch"]:
