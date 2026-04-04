@@ -1,20 +1,20 @@
-def mean_square_error(real_data, true_data): 
+def grad_mean_square_error(true_data, real_data): 
     """
     Script: 
-        mean_square_error.py
+        grad_mean_square_error.py
 
     Description: 
-        Returns the mean squared error between true_data and real_data.
+        Returns the gradient of the mean squared error between true_data and real_data.
 
     Development Status: 
         Complete
 
     Usage: 
         Inputs: 
-            - true_data (ndarray (preferred), array, matrix, tensor): The truth values.
+            - true_data (ndarray (preferred), array, matrix, tensor): The true values.
             - real_data (ndarray (preferred), array, matrix, tensor): The real/actual/measured values.
         Outputs: 
-            - mse (float): The mean squared error between the true and actual data.
+            - mse (float): The mean squared error between the true and real/actual/measured data.
 
     Desired Capabilities:
 
@@ -38,7 +38,7 @@ def mean_square_error(real_data, true_data):
         real_data = np.array(real_data)
 
     # == COMPUTE MSE ========================================
-    mse = np.mean((real_data - true_data) ** 2)
+    grad_mse = true_data - real_data
     
     # == RETURN THE MSE =====================================
-    return mse
+    return grad_mse
