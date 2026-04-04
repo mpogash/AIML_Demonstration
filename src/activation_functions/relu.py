@@ -25,9 +25,16 @@ def relu(data):
         ------------------------------------------------------------------
         
     """
+
+    # == IMPORT LIBRARIES ===================================
     import numpy as np
+
+    # == CONVERT TO NPARRAY =================================
     if not isinstance(data, (np.ndarray)):
         data = np.array(data)
 
+    # == APPLY RELU ACTIVATION FUNCTION =====================
     data_activated = np.maximum(0 , data)
+
+    # == RETURN RESULT ======================================
     return data_activated

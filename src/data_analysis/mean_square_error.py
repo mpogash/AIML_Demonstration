@@ -26,12 +26,19 @@ def mean_square_error(true_data, actual_data):
         ------------------------------------------------------------------
         
     """
+
+    # == IMPORT LIBRARIES ===================================
     import numpy as np
+
+    # == CONVERT TO NPARRAYS ================================
     if not isinstance(true_data, (np.ndarray)):
         true_data = np.array(true_data)
 
     if not isinstance(actual_data, (np.ndarray)):
         actual_data = np.array(actual_data)
 
+    # == COMPUTE MSE ========================================
     mse = np.mean((true_data - actual_data) ** 2)
+    
+    # == RETURN THE MSE =====================================
     return mse
