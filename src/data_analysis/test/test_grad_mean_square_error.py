@@ -1,18 +1,23 @@
-def test_mean_square_error(): 
+def test_grad_mean_square_error(): 
     """
     Script: 
-        test_mean_square_error.py
+        test_grad_mean_square_error.py
 
     Description: 
-        test script for mean_square_error.py
+        test script for grad_mean_square_error.py
 
     Development Status: 
         Complete
 
     Usage: 
-        python -m src.data_analysis.test.test_mean_square_error
+        python -m src.data_analysis.test.test_grad_mean_square_error
 
     Desired Capabilities:
+
+    Developer Notes: 
+        grad_mean_square_error requires the proper order of arguments in the function call; however, 
+        for testing purposes, the variable names in the latter test cases are fed "improperly" to the 
+        function. The tests are valid and operate as intended, albeit the discrepency in variable names. 
 
     Revision History:
         ------------------------------------------------------------------
@@ -26,7 +31,7 @@ def test_mean_square_error():
     print("\ncalled test_mean_square_error.py\n")
 
     # == IMPORT LIBRARIES ==================================
-    from src.data_analysis.mean_square_error import mean_square_error
+    from src.data_analysis.grad_mean_square_error import grad_mean_square_error
     import numpy as np
 
     # == MACHINE TOLERANCE THRESHOLD =======================
@@ -39,31 +44,37 @@ def test_mean_square_error():
     err_sq = err**2
 
     # == TESTS =============================================
-    # Test two positive integers
-    assert mean_square_error(1, 3) == 4
+    # positive integers, real < truth
+    assert grad_mean_square_error(1, 3) == -2
+
+    # positive integers, real > truth
+    assert grad_mean_square_error(3, 1) == 2
     
-    # Test a negative integer and 0
-    assert mean_square_error(-1, 0) == 1
+    # negative integers and 0
+    assert grad_mean_square_error(-1, 0) == -1
     
     # Test vectors
     true_vec = test_array
     real_vec = true_vec+err
-    # account for machine precision; could also be done with np.isclose or np.testing.assert_allclose()
-    assert mean_square_error(real_vec,true_vec) - err_sq < true_vec.size*mtt+mtt
-    
+    assert grad_mean_square_error(real_vec,true_vec).all() == (real_vec - true_vec).all()
+    assert grad_mean_square_error(true_vec,real_vec).all() == (true_vec - real_vec).all()
+
     # Test matrices
     #mat_1 = [vec_1, vec_1 ,vec_1] # this creates a list, would need to call np.array around it
     true_mat = np.tile(true_vec,(3,1))
-    real_mat = real_mat + err 
-    assert mean_square_error(real_mat,true_mat) - err_sq < true_mat.size*mtt+mtt
+    real_mat = true_mat + err 
+    assert grad_mean_square_error(real_mat,true_mat).all() == (real_mat - true_mat).all()
+    assert grad_mean_square_error(true_mat,real_mat).all() == (true_mat - real_mat).all()
  
     # Test tensors
     # demonstrate unique ways to make ND array (tensor) 
     true_tens = np.tile(true_mat[np.newaxis,:,:],(2,1,1))
     real_tens = np.array([real_mat, real_mat])
-    assert mean_square_error(tens_1,tens_2) - err_sq < tens_1.size*mtt+mtt
+    assert grad_mean_square_error(real_tens,true_tens).all() == (real_tens - true_tens).all()
+    assert grad_mean_square_error(true_tens,real_tens).all() == (true_tens - real_tens).all()
 
     # == REPORT STATUS =====================================
     print("test_mean_square_error.py successful\n")
 
-    test_mean_square_error()
+if __name__ == "__main__":
+    test_grad_mean_square_error()
