@@ -49,8 +49,6 @@ def test_gen_synthetic_data_linear():
     assert "feature_names" in dict_1.keys()
     assert "n_features" in dict_1.keys()
 
-    #print(f"dict_1 contains keys {dict_1.keys()}")
-
     # == REPORT STATUS =====================================
     print("test_gen_synthetic_data_linear.py successful\n")
 
