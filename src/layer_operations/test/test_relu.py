@@ -10,7 +10,7 @@ def test_relu():
         Complete
 
     Usage: 
-        python -m AIML_Demonstration.src.activation_functions.test.test_relu
+        python -m src.layer_operations.test.test_relu
 
     Desired Capabilities:
 
@@ -26,7 +26,7 @@ def test_relu():
     print("\ncalled test_relu.py\n")
 
     # == IMPORT LIBRARIES ==================================
-    from AIML_Demonstration.src.activation_functions.relu import relu
+    from src.layer_operations.relu import relu
     import numpy as np
 
     # == BUILD BASE ARRAYS FOR TESTING =====================
