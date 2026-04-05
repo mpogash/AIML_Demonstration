@@ -1,31 +1,34 @@
-def forward_pass(batch_data,layers): 
+def backward_pass(layers,hidden_layers,grad,train_properties): 
     """
     Script: 
-        forward_pass.py
+        backward_pass.py
 
     Description: 
         Passes data through layers of a neural network
 
     Development Status: 
-        Complete? 
-        Testing is minimal; only functional thus far, no output verification
+        In-Progress
 
     Usage: 
         Inputs: 
-            - batch_data (nparray): array of inputs
-            - layers (nested list) formatted as: 
+            - layers (nested list): array of inputs
                 - layers[n][0]: nth layer weight coefficientss
                 - layers[n][1]: nth layer bias coefficients 
+            - hidden_layers (nested list) formatted as: 
+                - hidden_layers[n][0]: nth hidden layer weight coefficientss
+                - hidden_layers[n][1]: nth hidden layer bias coefficients 
+            - grad
+            - train_properties (dictionary) containing: 
+                - "learning_rate" (float): learing rate
 
         Outputs: 
             - output_layer (nparray): output layer(s) 
             - hidden_layers (list of lists): hidden layer values
 
     Desired Capabilities:
-            - automatically applies relu activation to all hidden layers
+            - assumes relu activation was applied to all hidden layers
               and no activation function to the output layer... give 
               more flexibility
-            - need a way to track activation function used for backward_pass
 
     Revision History:
         ------------------------------------------------------------------
@@ -40,19 +43,18 @@ def forward_pass(batch_data,layers):
     import numpy as np
     from src.layer_operations.relu import relu
 
-    # == FORCE KEYS TO BE NPARRAY ===========================
-    if not isinstance(batch_data,np.ndarray):
-        batch_data = np.array(batch_data)
-
-    # == ITERATE THROUGH LAYERS =============================
-    hidden_layers = [batch_data.copy()]
-    for ll in range(0,len(layers)):
-        batch_data = np.matmul(batch_data,layers[ll][0]) + layers[ll][1]
-        if ll < len(layers) - 1:
-            batch = relu(batch_data)
-        hidden_layers.append(batch_data.copy())
+    # == ITERATE BACKWARD THROUGH LAYERS =====================
+    for ll in range(len(layers)-1,-1,-1):
+        if ll != len(layers)-1:
+            grad = np.multiply(grad, np.heaviside(hidden_layers[ll+1],0))
+        
+        weight_grad = hidden_layers[ll].T @ grad
+        bias_grad = np.mean(grad, axis=0)
+        layers[ll][0] -= weight_grad * train_properties["learning_rate"]
+        layers[ll][1] -= bias_grad * train_properties["learning_rate"]
+        grad = grad @ layers[ll][0].T
 
     # == RETURN RESULT ======================================
-    return batch_data, hidden_layers
+    return layers
 
 
