@@ -1,4 +1,4 @@
-def grad_mean_square_error(true_data, real_data): 
+def grad_mean_square_error(real_data, true_data): 
     """
     Script: 
         grad_mean_square_error.py
@@ -11,8 +11,8 @@ def grad_mean_square_error(true_data, real_data):
 
     Usage: 
         Inputs: 
-            - true_data (ndarray (preferred), array, matrix, tensor): The true values.
-            - real_data (ndarray (preferred), array, matrix, tensor): The real/actual/measured values.
+            - real_data (ndarray (preferred), array, matrix, tensor): The real/actual/measured/observed values.
+            - true_data (ndarray (preferred), array, matrix, tensor): The true/predicted values.
         Outputs: 
             - mse (float): The mean squared error between the true and real/actual/measured data.
 
@@ -23,8 +23,7 @@ def grad_mean_square_error(true_data, real_data):
         |  ID  |  Author     |     Date       |       Description
         ------------------------------------------------------------------
         |  0   | M.Pogash    |  04-Apr-2026   | - Initial Drop                   
-        ------------------------------------------------------------------
-        
+        ------------------------------------------------------------------     
     """
 
     # == IMPORT LIBRARIES ===================================
@@ -38,7 +37,7 @@ def grad_mean_square_error(true_data, real_data):
         real_data = np.array(real_data)
 
     # == COMPUTE MSE ========================================
-    grad_mse = true_data - real_data
+    grad_mse = real_data - true_data
     
     # == RETURN THE MSE =====================================
     return grad_mse
