@@ -1,0 +1,25 @@
+Autoprompting is getting in the way. 
+Disbale it by configuring the setting.jon file to look like
+
+
+{
+    "editor.inlineSuggest.edits.allowCodeShifting": "never",
+    "editor.inlineSuggest.edits.renderSideBySide": "never",
+    "editor.quickSuggestions": false,
+    "editor.suggest.showSuggestions": false,
+    "gitHub.copilot.inlineSuggest.enable": false,
+    "gitHub.copilot.editor.enableAutoCompletions": false,
+    "github.copilot.enable": {
+        "*": false
+    }
+} 
+{
+"editor.quickSuggestions": {
+    "other": "off",
+    "comments": "off",
+    "strings": "off"
+},
+"editor.suggestOnTriggerCharacters": false,
+"editor.parameterHints.enabled": false,
+"editor.wordBasedSuggestions": "off"
+}

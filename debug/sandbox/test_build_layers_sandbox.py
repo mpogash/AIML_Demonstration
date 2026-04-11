@@ -1,17 +1,16 @@
-def test_forward_pass(): 
+def test_build_layers(): 
     """
     Script: 
-        test_forward_pass.py
+        test_build_layers.py
 
     Description: 
-        test script for forward_pass.py
+        test script for build_layers.py
 
     Development Status: 
-        In-Progress
-        Tests only functional. Need to strengthen tests to examine outputs
+        Complete
 
     Usage: 
-        python -m src.layer_operations.test.test_forward_pass
+        python -m debug.sandbox.test_build_layers_sandbox
 
     Desired Capabilities:
 
@@ -28,41 +27,49 @@ def test_forward_pass():
         
     """
     # == REPORT STATUS =====================================
-    print("\ncalled test_forward_pass.py\n")
+    print("\ncalled test_build_layers.py\n")
 
     # == IMPORT LIBRARIES ==================================
-    from src.layer_operations.forward_pass import forward_pass
     from src.layer_operations.build_layers import build_layers
     import numpy as np
 
-    # == BUILD LAYERS AND DATA FOR TESTING ==================
-    batch_data = np.arange(-10,10)
-    n_neurons_layer_0 = len(batch_data)
-    
+    # == BUILD DICTIONARIES FOR TESTING LAYERS BUILD =======
     # test with all keys defined
     layer_properties_1 = {
-        "neurons_per_layer": [n_neurons_layer_0, n_neurons_layer_0*2,n_neurons_layer_0//2, 1],
-        "weight_sigma_initial": np.random.uniform(-3,3,size=4),
-        "bias_sigma_initial": np.random.uniform(-2,2,size=4),
+        "neurons_per_layer": [3, 10, 10, 1],
+        "weight_sigma_initial": np.random.uniform(-1,1,size=4),
+        "bias_sigma_initial": np.random.uniform(-1,1,size=4),
     }
     # test with only required keys
     layer_properties_2 = {
-        "neurons_per_layer": [n_neurons_layer_0, 1],
+        "neurons_per_layer": [1, 1],
+        "weight_sigma_initial": np.random.uniform(-3,3,size=2),
+        "bias_sigma_initial": np.random.uniform(-2,2,size=2),
     }
 
     # == TESTS =============================================
     layers_1 = build_layers(layer_properties_1)
-    batch_data_1, hidden_layers_1 = forward_pass(batch_data,layers_1)
-
     layers_2 = build_layers(layer_properties_2)
-    batch_data_2, hidden_layers_2 = forward_pass(batch_data,layers_2)
 
-      # == REPORT STATUS =====================================
-    print("test_forward_pass.py successful\n")
-    print("test_forward_pass.py only consists of a functional test. No output verificaiton is performed\n")
+    print(layers_1)
+    """
+    assert layers_1[0][0].shape == (layer_properties_1["neurons_per_layer"][0],layer_properties_1["neurons_per_layer"][1])
+    assert layers_1[0][1].shape == (1,layer_properties_1["neurons_per_layer"][1])
+    assert layers_1[1][0].shape == (layer_properties_1["neurons_per_layer"][1],layer_properties_1["neurons_per_layer"][2])
+    assert layers_1[1][1].shape == (1,layer_properties_1["neurons_per_layer"][2])
+    assert layers_1[2][0].shape == (layer_properties_1["neurons_per_layer"][2],layer_properties_1["neurons_per_layer"][3])
+    assert layers_1[2][1].shape == (1,layer_properties_1["neurons_per_layer"][3])   
+
+    assert layers_2[0][0].shape == (layer_properties_2["neurons_per_layer"][0],layer_properties_2["neurons_per_layer"][1])
+    assert layers_2[0][1].shape == (1,layer_properties_2["neurons_per_layer"][1])
+    assert layers_2[1][0].shape == (layer_properties_2["neurons_per_layer"][1],layer_properties_2["neurons_per_layer"][2])
+    assert layers_2[1][1].shape == (1,layer_properties_2["neurons_per_layer"][2])
+    """
+    # == REPORT STATUS =====================================
+    print("test_build_layers.py successful\n")
 
 if __name__ == "__main__":
-    test_forward_pass()
+    test_build_layers()
 
 """
 # DEBUG TEXT

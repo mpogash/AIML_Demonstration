@@ -11,8 +11,8 @@ def mean_square_error(real_data, true_data):
 
     Usage: 
         Inputs: 
-            - true_data (ndarray (preferred), array, matrix, tensor): The truth values.
-            - real_data (ndarray (preferred), array, matrix, tensor): The real/actual/measured values.
+            - real_data (ndarray (preferred), array, matrix, tensor): The real/actual/measured/observed values.
+            - true_data (ndarray (preferred), array, matrix, tensor): The true/predicted values.
         Outputs: 
             - mse (float): The mean squared error between the true and actual data.
 

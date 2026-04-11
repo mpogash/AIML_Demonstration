@@ -42,10 +42,12 @@
 
 ### Things To Do: 
     - make scripts configuration file driven, currently defining inputs within top block of code 
-    - Wrap common lines into functions
     - Save synthetic data as a CSV to showcase reading it in and using it. 
     
 ### Common Issues:
+    - VSCode defaulting to enable copilot suggestions
+         see ./debug/settings_json_configuration.txt
+
     - VS Code was used to access Ubtuntu WSL terminal to run this script. The command pallete, Python: Select 
       Interpreter, was used to select the appropriate Python environment with the necessary libraries installed.
 

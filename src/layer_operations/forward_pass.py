@@ -25,6 +25,7 @@ def forward_pass(batch_data,layers):
             - automatically applies relu activation to all hidden layers
               and no activation function to the output layer... give 
               more flexibility
+            - need a way to track activation function used for backward_pass
 
     Revision History:
         ------------------------------------------------------------------
@@ -43,7 +44,7 @@ def forward_pass(batch_data,layers):
     if not isinstance(batch_data,np.ndarray):
         batch_data = np.array(batch_data)
 
-    # == BUILD LAYERS =======================================
+    # == ITERATE THROUGH LAYERS =============================
     hidden_layers = [batch_data.copy()]
     for ll in range(0,len(layers)):
         batch_data = np.matmul(batch_data,layers[ll][0]) + layers[ll][1]
