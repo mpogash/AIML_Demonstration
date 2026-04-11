@@ -14,14 +14,8 @@ Description:
               evaluation of number of epochs and learning rate         
 
 Development Status: 
-    Partially Complete. 
-    Scipt currently performs the following:
-        - Generates synthetic data
-        - Trains a linear regression model using scikit-learn's LinearRegression class
-        - Trains a linear regression model using a NN built with tensorflow
-        - Visualizes the synthetic data and the predictions of the linear regression model as well as reisduals   
-    The following capabilities are desired but not yet implemented:
-        - Train a linear regression model using a custom-built neural network (NN) from scratch 
+    - Partially complete
+            - main goal accomplished, but, fine tuning could still be performed 
 
 Usage: 
     1. Modify the user-defined parameters in the "DEFINE USER INPUTS" section as desired.
@@ -49,6 +43,8 @@ Desired Capabilities:
     2. Activation Function Variation:
         a. Implement the ability to select different activation functions (e.g., ReLU, Sigmoid, Tanh)
            for the hidden layers of the NN and compare their performance on the linear regression
+
+    3. Add visualization for training loss of custom neural network
 
 Revision History:
     ------------------------------------------------------------------
@@ -164,11 +160,6 @@ if y_train.ndim == 1:
 if y_test.ndim == 1:
     y_test = y_test.reshape(-1,1)
 
-#print(f"size of y_train is {y_train.shape}")# , {len(y_train[0])}")
-#print(f"size of x_train is {x_train.shape}")# , {len(x_train[0])}")
-#print(f"size of y_train is {y_train.shape}")# , {len(y_train[0])}")
-#sys.exit()
-
 # normalize the feature data using standard scaling (zero mean, unit variance)
 feature_normalizer = StandardScaler()
 x_train_normalized = feature_normalizer.fit_transform(x_train)
@@ -190,19 +181,12 @@ layers_c_nn = build_layers(cust_nn_properties)
 print(f"epoch loop not started")
 print(f"layers are {layers_c_nn}")
 for ee in range(cust_nn_properties["n_epochs"]):
-    #epoch_loss = 0
     for bb in range(0,y_train.shape[0],cust_nn_properties["batch_size"]):
         x_train_bb = x_train_normalized[bb:(bb+cust_nn_properties["batch_size"])]
         y_train_bb = y_train[bb:(bb+cust_nn_properties["batch_size"])]
 
         y_inferred_bb,hidden_layer = forward_pass(x_train_bb,layers_c_nn)
-        #print(f"y_train_bb type is {type(y_train_bb)} and shape of y_train_bb is {y_train_bb.shape}")
-        #print(f"y_inferred_bb type is {type(y_inferred_bb)}")
-        #print(f"shape of y_inferred_bb is {y_inferred_bb.shape} and hidden layer is {len(hidden_layer), len(hidden_layer[0])}")
         grad_bb = grad_mean_square_error(y_inferred_bb,y_train_bb)
-        #print(f"shape of grad_bb is {grad_bb.shape}")
-        #epoch_loss += np.mean(loss_bb**2)
-    
         layers_c_nn = backward_pass(layers_c_nn,hidden_layer,grad_bb,cust_nn_properties)
         #print(f"epoch is {ee}, batch index start is {bb} and data sampling start is {bb} and stop is {(bb+cust_nn_properties["batch_size"])}\n")
         #print(f"layers_c_nn are {layers_c_nn}")
@@ -361,6 +345,7 @@ if configuration_details["figure_generation_switch"]:
     else:
         y_axis_label = tf_properties["loss_metric"] 
 
+    # add capability to track training loss
     #fig_ax[2].plot(y_train_loss, marker=marker_train_loss, color=c_train_loss_tf, linestyle='none', ms = ms_train_test_loss, linewidth=lw, label="Custom NN Training Loss")
     fig_ax[2].plot(cust_nn_mse_hist, marker=marker_test_loss_c_nn, color=c_test_loss_c_nn, linestyle='none', ms = ms_train_test_loss, linewidth=lw, label="Custom NN Validation Loss")
     fig_ax[2].plot(y_train_loss, marker=marker_train_loss_tf, color=c_train_loss_tf, linestyle='none', ms = ms_train_test_loss, linewidth=lw, label="TensorFlow Training Loss")

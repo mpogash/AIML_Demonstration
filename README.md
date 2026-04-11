@@ -4,12 +4,14 @@
     POC: Mike Pogash
     Origin Date: 2026-03-29
     Revision History: 
-    --------------------------------------------------
+    --------------------------------------------------------------------------------------------
     ID  |       Date      |    Description
-    --------------------------------------------------
+    --------------------------------------------------------------------------------------------
     0   |   29-Mar-2026   |  initial drop of: 
                           |      /scripts/linear_regression_neural_network.py
                           |      
+    1   |   04-Apr-2026   |  successful implementation of custom NN
+                          
 ## Project Description:
 
 
@@ -33,9 +35,13 @@
 
 ### Limitations:
     - Repsository started on 03-29-2026. Development of the repository is ongoing. 
+    - 04-10-2026. Despite limited duration of development. Goals are accomplished. 
+      A custom neural network is programmed from first principles, compared with 
+      a standard linear regresion of scikit-learn, and also compared with tensoflow
 
 ### Required Libraries & APIs:
     - pandas, numpy, matplotlib, os, sklearn, TensorFlow, datetime, more_itertools
+      sys
 
 ## Developer Notes
 

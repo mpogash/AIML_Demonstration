@@ -45,7 +45,6 @@ def backward_pass(layers,hidden_layers,grad,train_properties):
     from src.layer_operations.relu import relu
 
     # == ITERATE BACKWARD THROUGH LAYERS =====================
-    #print(f"shape of layers is  {len(layers)} , {len(layers[0])}")
     for ll in range(len(layers)-1,-1,-1):
         if ll != len(layers)-1:
             # assume relu activation function
@@ -53,10 +52,6 @@ def backward_pass(layers,hidden_layers,grad,train_properties):
         
         weight_grad = hidden_layers[ll].T @ grad
         bias_grad = np.mean(grad, axis=0)
-        #print(f"shape of hidden_layer[layer_i].T is {len(hidden_layers[ll].T)} , {len(hidden_layers[ll].T[0])}")
-        #print(f"shape of grad is {len(grad)} , {len(grad[0])}")
-        #print(f"shape of weight grad is {len(weight_grad)} , {len(weight_grad[0])}")
-        #print(f"shape of layers is  {len(layers)} , {len(layers[0])}")
         layers[ll][0] -= weight_grad * train_properties["learning_rate"]
         layers[ll][1] -= bias_grad * train_properties["learning_rate"]
         grad = grad @ layers[ll][0].T
@@ -65,3 +60,13 @@ def backward_pass(layers,hidden_layers,grad,train_properties):
     return layers
 
 
+
+"""
+Debug lines: 
+    #print(f"shape of layers is  {len(layers)} , {len(layers[0])}")
+
+        #print(f"shape of hidden_layer[layer_i].T is {len(hidden_layers[ll].T)} , {len(hidden_layers[ll].T[0])}")
+        #print(f"shape of grad is {len(grad)} , {len(grad[0])}")
+        #print(f"shape of weight grad is {len(weight_grad)} , {len(weight_grad[0])}")
+        #print(f"shape of layers is  {len(layers)} , {len(layers[0])}")
+"""
