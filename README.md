@@ -7,9 +7,7 @@
     --------------------------------------------------------------------------------------------
     ID  |       Date      |    Description
     --------------------------------------------------------------------------------------------
-    0   |   29-Mar-2026   |  initial drop of: 
-                          |      /scripts/linear_regression_neural_network.py
-                          |      
+    0   |   29-Mar-2026   |  initial baseline of code repo
     1   |   04-Apr-2026   |  successful implementation of custom NN
                           
 ## Project Description:
@@ -25,10 +23,11 @@
         - see /scripts/linear_regression_neural_network.py
         - uses scikit-learn LinearRegression as source of truth, a tensorflow 
           as a secondary model for performance verification
-        - programs a NN from a linear model using first principles
-        - visualizes errors between developed NN, scikit-learn Linear regression, 
-          and tensorflow NN
-        - visualizes progresss of training for the developed NN
+        - programs a NN for a linear model using first principles
+        - visualizes errors between customly developed NN, scikit-learn linear
+          regression, and a linear regression with tensorflow NN
+        - visualizes progresss of training for the developed NN and tensor flow
+          as well as compares residuals and resulting fits
 
 ### Goal Capabilites:       
     - See indivudal scripts for a description of desired improvments.
