@@ -138,11 +138,11 @@ tf_properties = {
 #   04-14: Values for  n_epochs, learning_rate, batch_size can be varied as desired by the user
 
 cust_nn_properties = {
-    "learning_rate": 0.01,
+    "learning_rate": 0.0001,
     "neurons_per_layer": [1, 1],
     "weight_sigma_initial": [1, 1],
     "bias_sigma_initial": [1, 1],
-    "n_epochs": 50,
+    "n_epochs": 100,
     "batch_size": 32,
     "early_stopping_threshold": 0.01,
     "activation_function": "linear"
