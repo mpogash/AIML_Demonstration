@@ -13,14 +13,10 @@ Description:
     See the  ./figures/linear_regression_neural_network/ directory for a demonstration and parametric 
               evaluation of number of epochs and learning rate         
 
-Development Status: 
-    - Partially complete
-            - main goal accomplished, but, fine tuning could still be performed 
-
 Usage: 
     1. Modify the user-defined parameters in the "DEFINE USER INPUTS" section as desired.
     2. Change to the main directory of the project in the terminal: 
-           cd /home/mike/GitHub/AIML_Demonstration/).
+           ex. cd /home/mike/GitHub/AIML_Demonstration/).
     3. Run the script:
            python -m scripts.linear_regression_neural_network
     4. Observe output figures created in the specified directory.
@@ -32,26 +28,37 @@ Tips:
        does not have a smooth gradient. If the solution space is pristine, increase the 
        learning rate by an order of magnitude to speed up convergence.
 
-Desired Capabilities:
-    0. Configuration File Driven Architecture:
+Development Status: 
+    - Partially complete
+            - main goal accomplished, but, fine tuning could still be performed 
+            - entirety of script not extended to multiple features nor layers, thus, 
+              current results are limited to a a single input independent variable 
+              and single neuron in the hidden layer are allowed. 
+
+Desired Capabilities Priority List:
+    0. Extened code to handle more than one dimension in the input indedpendent variable space 
+       and allow the code to handle multiple neurons in the hidden layers
+    1. Configuration File Driven Architecture:
         a. The script should be driven by a configuration file
 
-    1. Data Visualization: 
+    2. Data Visualization: 
         a. Add a logarithmic rounding funciton for figures
         b. Add R^2 to text box of figures                   
 
-    2. Activation Function Variation:
+    3. Activation Function Variation:
         a. Implement the ability to select different activation functions (e.g., ReLU, Sigmoid, Tanh)
            for the hidden layers of the NN and compare their performance on the linear regression
 
-    3. Add visualization for training loss of custom neural network
+    4. Add visualization for training loss of custom neural network
 
 Revision History:
-    ------------------------------------------------------------------
+    ----------------------------------------------------------------------------------------------------------------
     |  ID  |  Author     |     Date       |       Description
-    ------------------------------------------------------------------
-    |  0   | M.Pogash    |  29-Mar-2026   | - Initial Drop                   
-    ------------------------------------------------------------------
+    -----------------------------------------------------------------------------------------------------------------
+    |  0   | M.Pogash    |  29-Mar-2026   | - Initial Drop    
+    |  1   | M.Pogash    |  10-Apr-2026   | - Working up to one independent variable and one 
+    |      |             |                |   hidden layeer. Only relu activation function availible
+    ----------------------------------------------------------------------------------------------------------------
     
 """
 
@@ -86,8 +93,12 @@ from src.data_analysis.mean_square_error import mean_square_error
 
 # == DEFINE USER INPUTS =====================================================================
 # Modify the user-defined parameters in this section as desired.
-# Future iterations will use a configuration file
+# Future iterations will use a configuration file that is documented
 
+# DEFINE PROPERTIES OF THE SYNTHETIC DATA
+#    04-14: limit feature_weights to one value, floats are fine. Inteded to be fixed to allow
+#           multi-dimensionsal linear regression
+#    04-14: All values can be altered as desired to test various cases.
 synthetic_data_properties = {
     "n_samples": 5E3,
     "feature_weights": [4],
@@ -97,11 +108,16 @@ synthetic_data_properties = {
     "x_data_range": (0, 10)
 }
 
+# DEFINE IF FIGURES SHOULD BE GENERATED AND SAVED, AS WELL AS THEIR DIR
 configuration_details = {
     "figure_generation_switch": True,
     "figure_directory": f"/home/mike/GitHub/AIML_Demonstration/figures/linear_regession_neural_network/runs{datetime.now().date()}"
  }
 
+# DEFINE TENSORFLOW MODEL PROPERTIES. 
+#    04-14: limit key values to single values. Extensions of the linear regression to 
+#           multiple dimensions in upcoming. 
+#    04-14: Values for  n_epochs, learning_rate, batch_size, test_size can be varied as desired by the user
 tf_properties = {
     "n_epochs": 10,
     "learning_rate": 0.1,
@@ -114,7 +130,13 @@ tf_properties = {
     "report_metrics": ["mse"], # remove? Not used in current iteration
 }   
 
-# not currently implement. 
+# CUSTOM NEURAL NETWORK PROPERTIES 
+#   04-14: neurons_per_layer, weight_sigma_initial, and bias_sigma_initial 
+#
+#   04-14: limit key values to single values. Extensions of the linear regression to 
+#          multiple dimensions in upcoming. 
+#   04-14: Values for  n_epochs, learning_rate, batch_size can be varied as desired by the user
+
 cust_nn_properties = {
     "learning_rate": 0.01,
     "neurons_per_layer": [1, 1],
@@ -124,7 +146,6 @@ cust_nn_properties = {
     "batch_size": 32,
     "early_stopping_threshold": 0.01,
     "activation_function": "linear"
-    # "n_layers": [1, 1, 1], autopopulated
 }
 
 # == END USER INPUT DEFINITION ==============================================================
