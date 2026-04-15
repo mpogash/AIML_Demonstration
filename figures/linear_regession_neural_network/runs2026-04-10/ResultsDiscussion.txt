@@ -1,23 +1,24 @@
 	See ResultsDiscusion.txt in ../runs2026-04-01 for description of the 
-	analysis performed for TensorFlow optimization. 
+	analysis performed for TensorFlow parameter optimization. 
 
-
-	These results, ./runs2026-04-10 are for the custom neural network 
+	These results (./runs2026-04-10) are for the custom neural network 
  	parameter optimization
 
-	Parametric evaluation of learning rate and number of epochs performed
+		Parameters optimized solely include learning rate and number of 
+		epochs as of 04-10
+
+	Parametric evaluation of learning rate and number of epochs was performed
 	for the cases below. Note that once a learning rate was set such that 
-	the model did not converge, the remaining, larger, learning rates were
+	the model did not converge, then the remaining, larger learning rates were
 	omitted from testing. 
 		learning rate: 0.01, 0.001, 0.0001
-		number of epochs: 10, 25, 50
+		number of epochs: 10, 25, 50, 100
 	
-		
 	The fastest (fewest epochs) parameters used in the TensorFlow model 
-        are displayed for reference in these figures. Convergence occurs with 
-        low (non-zero) bias in only 10 iterations with a learning rate of 0.1.
-        The dataset is very well defined, despite the noise. So the solution
-        is easily found with a large learning rate. 
+    are displayed for reference in these figures. Convergence occurs with 
+	negligible bias in only 10 iterations with a learning rate of 0.1.
+    The dataset is very well defined, despite the noise, thus the solution
+    is easily found with a large learning rate. 
 	
 	For the custom neural network model, the following cases show:
 		 no solution convergence:
@@ -25,3 +26,9 @@
 			n epochs = 25, learning rate = 0.001
 			n epochs = 50, learning rate = 0.001 (close), 0.0001
 			n epochs = 100, learning rate = 0.0001	
+		
+		solution convergence: 
+			n epochs = 10, learning rate = 0.01
+			n epochs = 25, learning rate = 0.01
+			n epochs = 50, learning rate = 0.01, 0.001 (close)
+			n epochs = 100, learning rate = 0.01, 0.001	
