@@ -30,7 +30,7 @@
           as well as compares residuals and resulting fits
 
 ### Goal Capabilites:       
-    - See indivudal scripts for a description of desired improvments.
+    - See indivudal scripts, ./scripts/ for a description of desired improvments.
 
 ### Limitations:
     - Repsository started on 03-29-2026. Development of the repository is ongoing. 
